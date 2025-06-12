@@ -4,8 +4,50 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Library</title>
+		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body>
+		<div class="container">
+			<div class="book-list-container"></div>
+			<button class="open-dialog-btn">Add a new Book</button>
+			<dialog closedby="any" class="dialog">
+				<p>Add a new Book</p>
+
+				<form class="form" method="dialog">
+					<label for="title"
+						>Title:
+						<input type="text" id="title" name="title" />
+					</label>
+
+					<label for="author">
+						Author:
+						<input type="text" id="author" name="author" />
+					</label>
+
+					<label for="pages">
+						# of pages:
+						<input type="number" id="pages" name="pages" min="0" />
+					</label>
+
+					<fieldset>
+						<legend>Did you already read this book?</legend>
+						<label for="notRead">
+							Not read:
+							<input type="radio" id="notRead" name="wasRead" value="notRead" />
+						</label>
+						<label for="read">
+							Read:
+							<input type="radio" id="read" name="wasRead" value="read" />
+						</label>
+					</fieldset>
+
+					<div>
+						<button type="submit" value="cancel" autofocus>Cancel</button>
+						<button type="submit" value="submitBook">Add new book</button>
+					</div>
+				</form>
+			</dialog>
+		</div>
 		<script src="./app.js"></script>
 	</body>
 </html>
