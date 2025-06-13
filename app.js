@@ -4,7 +4,7 @@ const openDialogBtn = document.querySelector(".open-dialog-btn");
 const dialog = document.querySelector(".dialog");
 const form = document.querySelector(".form");
 
-const myLibrary = [];
+let myLibrary = [];
 
 renderLibrary();
 
@@ -76,6 +76,9 @@ function createNewBookLi(book) {
 	const removeBookButton = document.createElement("button");
 	removeBookButton.textContent = "Remove this book from library";
 	removeBookButton.setAttribute("type", "button");
+	removeBookButton.setAttribute("id", book.id);
+
+	removeBookButton.addEventListener("click", handleRemoveBook);
 
 	form.appendChild(h3Title);
 	form.appendChild(pAuthor);
@@ -86,6 +89,12 @@ function createNewBookLi(book) {
 	li.appendChild(form);
 
 	return li;
+}
+
+function handleRemoveBook(e) {
+	const id = e.target.id;
+	myLibrary = myLibrary.filter(book => book.id !== id);
+	renderLibrary();
 }
 
 function addBookToLibrary(
@@ -115,12 +124,6 @@ function Book(title = "", author = "", pages = 0, wasRead = false) {
 openDialogBtn.addEventListener("click", handleOpenDialog);
 function handleOpenDialog() {
 	dialog.showModal();
-}
-
-dialog.addEventListener("close", handleCloseDialog);
-function handleCloseDialog(e) {
-	console.log({ e });
-	console.log({ v: e.target.returnValue });
 }
 
 form.addEventListener("submit", handleSubmit);
