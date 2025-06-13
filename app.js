@@ -13,13 +13,19 @@ function renderLibrary() {
 
 	const ul = document.createElement("ul");
 
+	if (myLibrary.length === 0) {
+		ul.textContent = "(Empty)";
+		bookListContainer.appendChild(ul);
+		return;
+	}
+
 	for (let i = 0; i < myLibrary.length; i++) {
 		const book = myLibrary[i];
 		const li = createNewBookLi(book);
 		ul.appendChild(li);
 	}
-
 	bookListContainer.appendChild(ul);
+
 	console.log({ myLibrary });
 }
 
@@ -34,10 +40,10 @@ function createNewBookLi(book) {
 	h3Title.textContent = book.title;
 
 	const pAuthor = document.createElement("p");
-	pAuthor.textContent = `Written by: ${book.author}`;
+	pAuthor.textContent = `by: ${book.author}`;
 
 	const pPages = document.createElement("p");
-	pPages.textContent = `Number of pages: ${book.pages}`;
+	pPages.textContent = `${book.pages}/pages`;
 
 	const wasReadFieldSet = document.createElement("fieldset");
 
@@ -89,7 +95,7 @@ function createNewBookLi(book) {
 	wasReadFieldSet.appendChild(wasReadLabel);
 
 	const removeBookButton = document.createElement("button");
-	removeBookButton.textContent = "Remove this book from library";
+	removeBookButton.textContent = "Remove from library";
 	removeBookButton.setAttribute("type", "button");
 	removeBookButton.setAttribute("id", book.id);
 
@@ -97,8 +103,9 @@ function createNewBookLi(book) {
 
 	form.appendChild(h3Title);
 	form.appendChild(pAuthor);
-	form.appendChild(pPages);
+
 	form.appendChild(wasReadFieldSet);
+	form.appendChild(pPages);
 	form.appendChild(removeBookButton);
 
 	li.appendChild(form);
@@ -147,16 +154,20 @@ function handleOpenDialog() {
 form.addEventListener("submit", handleSubmit);
 function handleSubmit(e) {
 	e.preventDefault();
+	const submitterValue = e.submitter.value;
+	if (submitterValue === "submitBook") {
+		const formData = new FormData(form);
 
-	const formData = new FormData(form);
+		const title = formData.get("title") || undefined;
+		const author = formData.get("author") || undefined;
+		const pages = Number(formData.get("pages")) || undefined;
+		const wasRead = formData.get("wasRead") || undefined;
 
-	const title = formData.get("title") || undefined;
-	const author = formData.get("author") || undefined;
-	const pages = Number(formData.get("pages")) || undefined;
-	const wasRead = formData.get("wasRead") || undefined;
+		addBookToLibrary(title, author, pages, wasRead);
 
-	addBookToLibrary(title, author, pages, wasRead);
-
-	form.reset();
+		form.reset();
+		dialog.close();
+		return;
+	}
 	dialog.close();
 }

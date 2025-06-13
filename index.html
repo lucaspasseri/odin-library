@@ -12,7 +12,7 @@
 			<div class="book-list-container"></div>
 			<button class="open-dialog-btn">Add a new Book</button>
 			<dialog closedby="any" class="dialog">
-				<p>Add a new Book</p>
+				<h2>Add a new Book</h2>
 
 				<form class="form" method="dialog">
 					<label for="title"
@@ -33,16 +33,16 @@
 					<fieldset>
 						<legend>Did you already read this book?</legend>
 						<label for="notRead">
-							Not read:
+							No:
 							<input type="radio" id="notRead" name="wasRead" value="notRead" />
 						</label>
 						<label for="read">
-							Read:
+							Yes:
 							<input type="radio" id="read" name="wasRead" value="read" />
 						</label>
 					</fieldset>
 
-					<div>
+					<div class="btn-container">
 						<button type="submit" value="cancel" autofocus>Cancel</button>
 						<button type="submit" value="submitBook">Add new book</button>
 					</div>

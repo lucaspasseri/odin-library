@@ -21,7 +21,7 @@
 }
 
 html {
-	height: 100%;
+	min-height: 100%;
 	display: flex;
 }
 
@@ -29,47 +29,121 @@ body {
 	line-height: 1.5;
 	display: flex;
 	flex: 1 1 auto;
-	background-color: #e2e2e2;
+	background-color: #051e3e;
 	justify-content: center;
 }
 
+button {
+	height: 60px;
+	font-size: 1.2rem;
+	padding: 0.6em 1em;
+	width: 100%;
+	cursor: pointer;
+}
+
 .container {
-	border: 1px solid blue;
+	background-color: #251e3e;
 	display: flex;
 	flex: 1 1 auto;
 	flex-direction: column;
 	gap: 3em;
 	max-width: 1024px;
 	align-items: center;
-
-	button {
-		width: 240px;
-	}
 }
 
 header {
-	border: 1px solid purple;
 	width: 100%;
+	background-color: #451e3e;
+	color: white;
+	height: 160px;
+	font-size: 3em;
+	padding: 1em;
 }
 
 .book-list-container {
-	margin-top: 10em;
-	border: 1px solid green;
+	background-color: #451e3e;
 	padding: 3em;
-	height: 400px;
+	min-height: 400px;
 	width: 100%;
 
 	ul {
 		display: flex;
 		list-style: none;
-		border: 1px solid orange;
+		background-color: #651e3e;
 		padding: 1em;
 		height: 100%;
 		gap: 1em;
+		justify-content: center;
+		align-items: center;
+		color: white;
+		font-size: 1.2em;
+		flex-wrap: wrap;
 	}
 }
 
 .card {
-	border: 1px solid red;
-	width: 100%;
+	background-color: #851e3e;
+	width: 240px;
+	color: white;
+	box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+	padding: 0.5em;
+
+	form {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
+	h3 {
+		text-align: center;
+	}
+	p {
+		align-self: flex-end;
+		margin-bottom: 2em;
+	}
+
+	fieldset {
+		display: flex;
+		gap: 1em;
+		font-size: 0.8em;
+		margin-bottom: 2em;
+	}
+}
+
+.dialog {
+	color: white;
+	align-self: center;
+	justify-self: center;
+	width: 80%;
+	height: 50%;
+	font-size: 1.2em;
+	padding: 2em;
+	background-color: #451e3e;
+	border: 0;
+	box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+		rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+
+	form {
+		display: flex;
+		flex-direction: column;
+		gap: 2em;
+
+		input {
+			width: 100%;
+			height: 32px;
+		}
+
+		fieldset {
+			display: flex;
+		}
+	}
+
+	.btn-container {
+		display: flex;
+		gap: 2em;
+
+		button {
+			width: 200px;
+		}
+	}
 }
