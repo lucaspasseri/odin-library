@@ -30,8 +30,46 @@ body {
 	display: flex;
 	flex: 1 1 auto;
 	background-color: #e2e2e2;
+	justify-content: center;
 }
 
-li {
+.container {
+	border: 1px solid blue;
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	gap: 3em;
+	max-width: 1024px;
+	align-items: center;
+
+	button {
+		width: 240px;
+	}
+}
+
+header {
+	border: 1px solid purple;
+	width: 100%;
+}
+
+.book-list-container {
+	margin-top: 10em;
+	border: 1px solid green;
+	padding: 3em;
+	height: 400px;
+	width: 100%;
+
+	ul {
+		display: flex;
+		list-style: none;
+		border: 1px solid orange;
+		padding: 1em;
+		height: 100%;
+		gap: 1em;
+	}
+}
+
+.card {
 	border: 1px solid red;
+	width: 100%;
 }
