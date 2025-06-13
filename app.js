@@ -20,6 +20,7 @@ function renderLibrary() {
 	}
 
 	bookListContainer.appendChild(ul);
+	console.log({ myLibrary });
 }
 
 function createNewBookLi(book) {
@@ -47,11 +48,25 @@ function createNewBookLi(book) {
 	wasNotReadRadioButton.setAttribute("id", "wasNotReadRadioBtn");
 	wasNotReadRadioButton.setAttribute("type", "radio");
 	wasNotReadRadioButton.setAttribute("name", "wasRead");
+	wasNotReadRadioButton.setAttribute("data-book-id", book.id);
+
+	wasNotReadRadioButton.addEventListener("change", toggleWasRead);
 
 	const wasReadRadioButton = document.createElement("input");
 	wasReadRadioButton.setAttribute("id", "wasReadRadioBtn");
 	wasReadRadioButton.setAttribute("type", "radio");
 	wasReadRadioButton.setAttribute("name", "wasRead");
+	wasReadRadioButton.setAttribute("data-book-id", book.id);
+
+	wasReadRadioButton.addEventListener("change", toggleWasRead);
+	function toggleWasRead(e) {
+		const bookId = e.target.dataset.bookId;
+
+		myLibrary = myLibrary.map(book =>
+			book.id === bookId ? book.toggleWasRead() : book
+		);
+		renderLibrary();
+	}
 
 	if (book.wasRead) {
 		wasReadRadioButton.setAttribute("checked", true);
@@ -103,10 +118,8 @@ function addBookToLibrary(
 	pages = 0,
 	wasRead = false
 ) {
-	wasRead = wasRead ? true : false;
-	const newBook = new Book(title, author, pages, wasRead);
-	myLibrary.push(newBook);
-	console.log(myLibrary);
+	wasRead = wasRead === "read" ? true : false;
+	myLibrary.push(new Book(title, author, pages, wasRead));
 	renderLibrary();
 }
 
@@ -120,6 +133,11 @@ function Book(title = "", author = "", pages = 0, wasRead = false) {
 	this.pages = pages;
 	this.wasRead = wasRead;
 }
+
+Book.prototype.toggleWasRead = function () {
+	this.wasRead = !this.wasRead;
+	return this;
+};
 
 openDialogBtn.addEventListener("click", handleOpenDialog);
 function handleOpenDialog() {
