@@ -95,17 +95,27 @@ function createNewBookLi(book) {
 	wasReadFieldSet.appendChild(wasReadLabel);
 
 	const removeBookButton = document.createElement("button");
-	removeBookButton.textContent = "Remove from library";
 	removeBookButton.setAttribute("type", "button");
-	removeBookButton.setAttribute("id", book.id);
+	removeBookButton.setAttribute("data-id", book.id);
+
+	const trashImg = document.createElement("img");
+	trashImg.setAttribute("src", "./imgs/trash-can-outline.svg");
+	trashImg.setAttribute("alt", "trash icon");
+	trashImg.setAttribute("width", "30px");
+	trashImg.setAttribute("height", "30px");
+	const pRemove = document.createElement("p");
+	pRemove.textContent = "Remove book";
+
+	removeBookButton.appendChild(trashImg);
+	removeBookButton.appendChild(pRemove);
 
 	removeBookButton.addEventListener("click", handleRemoveBook);
 
 	form.appendChild(h3Title);
 	form.appendChild(pAuthor);
-
-	form.appendChild(wasReadFieldSet);
 	form.appendChild(pPages);
+	form.appendChild(wasReadFieldSet);
+
 	form.appendChild(removeBookButton);
 
 	li.appendChild(form);
@@ -114,7 +124,7 @@ function createNewBookLi(book) {
 }
 
 function handleRemoveBook(e) {
-	const id = e.target.id;
+	const id = e.currentTarget.dataset.id;
 	myLibrary = myLibrary.filter(book => book.id !== id);
 	renderLibrary();
 }
