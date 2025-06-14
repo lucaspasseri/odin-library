@@ -83,6 +83,10 @@ header {
 	}
 }
 
+.open-dialog-btn {
+	margin-bottom: 4em;
+}
+
 .card {
 	background-color: #851e3e;
 	width: 240px;

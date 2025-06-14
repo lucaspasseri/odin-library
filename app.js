@@ -9,7 +9,7 @@ let myLibrary = [];
 renderLibrary();
 
 function renderLibrary() {
-	document.querySelector(".book-list-container").innerHTML = "";
+	bookListContainer.innerHTML = "";
 
 	const ul = document.createElement("ul");
 
@@ -25,8 +25,6 @@ function renderLibrary() {
 		ul.appendChild(li);
 	}
 	bookListContainer.appendChild(ul);
-
-	console.log({ myLibrary });
 }
 
 function createNewBookLi(book) {
