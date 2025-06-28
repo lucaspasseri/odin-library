@@ -26,11 +26,29 @@ const myLibrary = (function () {
 		}
 	}
 
+	function toggleWasRead(book) {
+		if (book instanceof Book) {
+			book.toggleWasRead();
+		}
+	}
+
+	function getBookById(id) {
+		if (typeof id === "string") {
+			const book = myLibraryArr.find(book => book.id === id);
+			return book;
+		}
+	}
+
+	function toggleWasReadById(id) {
+		toggleWasRead(getBookById(id));
+	}
+
 	return {
 		init,
 		getLibrary,
 		addBook,
 		removeBookById,
+		toggleWasReadById,
 	};
 })();
 
@@ -39,12 +57,23 @@ class Book {
 	title;
 	author;
 	pages;
+	wasRead;
 
-	constructor(title = "(empty)", author = "(empty)", pages = 0) {
+	constructor(
+		title = "(empty)",
+		author = "(empty)",
+		pages = 0,
+		wasRead = false
+	) {
 		this.id = crypto.randomUUID();
 		this.title = title;
 		this.author = author;
 		this.pages = pages;
+		this.wasRead = wasRead;
+	}
+
+	toggleWasRead() {
+		this.wasRead = !this.wasRead;
 	}
 }
 
@@ -66,8 +95,9 @@ function createDisplay() {
 			const title = formData.get("title") || undefined;
 			const author = formData.get("author") || undefined;
 			const pages = formData.get("pages") || undefined;
+			const wasRead = formData.get("wasRead") === "read" ? true : false;
 
-			const newBook = new Book(title, author, pages);
+			const newBook = new Book(title, author, pages, wasRead);
 
 			myLibrary.addBook(newBook);
 			render();
@@ -94,7 +124,20 @@ function createDisplay() {
 				render();
 			});
 
+			const checkboxWasRead = document.createElement("input");
+			checkboxWasRead.setAttribute("type", "checkbox");
+			checkboxWasRead.checked = book.wasRead;
+			checkboxWasRead.setAttribute(
+				"name",
+				`${book.title}-wasRead:${book.wasRead}`
+			);
+			checkboxWasRead.addEventListener("change", e => {
+				myLibrary.toggleWasReadById(e.target.parentNode.dataset.id);
+				render();
+			});
+
 			li.appendChild(deleteButton);
+			li.appendChild(checkboxWasRead);
 
 			ul.appendChild(li);
 		});
