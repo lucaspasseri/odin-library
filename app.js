@@ -85,6 +85,17 @@ function createDisplay() {
 			li.setAttribute("data-id", book.id);
 			li.classList.add("card");
 
+			const deleteButton = document.createElement("button");
+			deleteButton.textContent = "delete book";
+
+			deleteButton.addEventListener("click", e => {
+				const bookId = e.target.parentNode.dataset.id;
+				myLibrary.removeBookById(bookId);
+				render();
+			});
+
+			li.appendChild(deleteButton);
+
 			ul.appendChild(li);
 		});
 
