@@ -9,7 +9,55 @@
 	<body>
 		<div class="container">
 			<header>MY LIBRARY</header>
-			<div class="book-list-container"></div>
+			<!-- <div class="book-list-container"></div> -->
+			<div class="book-list-container">
+				<!-- <ul>
+					<li>
+						<img src="./imgs/yellow-book.png" width="400px" height="400px" />
+						<span>0</span>
+					</li>
+					<li>
+						<img src="./imgs/yellow-book.png" width="400px" height="400px" />
+						<span>1</span>
+					</li>
+					<li>
+						<img src="./imgs/yellow-book.png" width="400px" height="400px" />
+						<span>2</span>
+					</li>
+					<li>
+						<img src="./imgs/yellow-book.png" width="400px" height="400px" />
+						<span>3</span>
+					</li>
+					<li>
+						<img src="./imgs/yellow-book.png" width="400px" height="400px" />
+						<span>4</span>
+					</li>
+					<li>
+						<img src="./imgs/yellow-book.png" width="400px" height="400px" />
+						<span>5</span>
+					</li>
+					<li>
+						<img src="./imgs/yellow-book.png" width="400px" height="400px" />
+						<span>6</span>
+					</li>
+					<li>
+						<img src="./imgs/yellow-book.png" width="400px" height="400px" />
+						<span>7</span>
+					</li>
+					<li>
+						<img src="./imgs/yellow-book.png" width="400px" height="400px" />
+						<span>8</span>
+					</li>
+					<li>
+						<img src="./imgs/yellow-book.png" width="400px" height="400px" />
+						<span>9</span>
+					</li>
+				</ul> -->
+			</div>
+			<div>
+				<button class="carousel-left-btn">left</button
+				><button class="carousel-right-btn">right</button>
+			</div>
 			<button class="open-dialog-btn">Add a new Book</button>
 			<dialog closedby="any" class="dialog">
 				<h2>Add a new Book</h2>
@@ -43,7 +91,9 @@
 					</fieldset>
 
 					<div class="btn-container">
-						<button type="submit" value="cancel" autofocus>Cancel</button>
+						<button class="close-dialog-btn" value="cancel" autofocus>
+							Cancel
+						</button>
 						<button type="submit" value="submitBook">Confirm</button>
 					</div>
 				</form>

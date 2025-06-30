@@ -1,4 +1,5 @@
 const myLibrary = (function () {
+	/// NO DIALOG, THE CANCEL BUTTON IS SUBMITTING and CREATING a NEW BOOK!!!!!
 	const myLibraryArr = [];
 	const display = createDisplay();
 
@@ -82,14 +83,86 @@ function createDisplay() {
 	const openDialogBtn = document.querySelector(".open-dialog-btn");
 	const dialog = document.querySelector(".dialog");
 	const form = document.querySelector(".form");
+	const carouselLeftBtn = document.querySelector(".carousel-left-btn");
+	const carouselRightBtn = document.querySelector(".carousel-right-btn");
+	const bookLi = document.querySelectorAll(".book-list-container li");
+
+	let carouselCurrentItemIndex = 0;
+
+	function increaseCarouselItemIndex() {
+		if (
+			myLibrary.getLibrary().length === 0 ||
+			myLibrary.getLibrary().length === 1
+		) {
+			return;
+		}
+
+		if (carouselCurrentItemIndex === myLibrary.getLibrary().length - 1) {
+			carouselCurrentItemIndex = 0;
+			return carouselCurrentItemIndex;
+		}
+		carouselCurrentItemIndex += 1;
+		return carouselCurrentItemIndex;
+	}
+	function decreaseCarouselItemIndex() {
+		if (
+			myLibrary.getLibrary().length === 0 ||
+			myLibrary.getLibrary().length === 1
+		) {
+			return;
+		}
+
+		if (carouselCurrentItemIndex === 0) {
+			carouselCurrentItemIndex = myLibrary.getLibrary().length - 1;
+			return carouselCurrentItemIndex;
+		}
+		carouselCurrentItemIndex -= 1;
+		return carouselCurrentItemIndex;
+	}
+
+	function getCarouselItemIndex() {
+		return carouselCurrentItemIndex;
+	}
+
+	console.log({ bookLi });
 
 	function init() {
+		carouselLeftBtn.addEventListener("click", () => {
+			const booksLi = document.querySelectorAll(".book-list-container li");
+			decreaseCarouselItemIndex();
+
+			console.log({
+				i: getCarouselItemIndex(),
+				size: myLibrary.getLibrary().length,
+			});
+			booksLi[getCarouselItemIndex()]?.scrollIntoView({
+				inline: "center",
+				behavior: "smooth",
+			});
+		});
+		carouselRightBtn.addEventListener("click", () => {
+			const booksLi = document.querySelectorAll(".book-list-container li");
+			increaseCarouselItemIndex();
+
+			console.log({
+				i: getCarouselItemIndex(),
+				size: myLibrary.getLibrary().length,
+			});
+			booksLi[getCarouselItemIndex()]?.scrollIntoView({
+				inline: "center",
+				behavior: "smooth",
+			});
+		});
+
 		openDialogBtn.addEventListener("click", () => {
 			dialog.showModal();
 		});
 
 		form.addEventListener("submit", e => {
-			const form = e.target;
+			if (e.submitter.attributes.class?.value === "close-dialog-btn") {
+				dialog.close();
+				return;
+			}
 
 			const formData = new FormData(form);
 			const title = formData.get("title") || undefined;
@@ -100,6 +173,7 @@ function createDisplay() {
 			const newBook = new Book(title, author, pages, wasRead);
 
 			myLibrary.addBook(newBook);
+			form.reset();
 			render();
 		});
 	}
@@ -136,8 +210,8 @@ function createDisplay() {
 				render();
 			});
 
-			li.appendChild(deleteButton);
 			li.appendChild(checkboxWasRead);
+			li.appendChild(deleteButton);
 
 			ul.appendChild(li);
 		});

@@ -65,21 +65,66 @@ header {
 .book-list-container {
 	background-color: #451e3e;
 	padding: 3em;
-	min-height: 456px;
+	min-height: 600px;
 	width: 100%;
 
 	ul {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-		align-items: center;
-		row-gap: 2em;
-		justify-items: center;
+		display: flex;
 		list-style: none;
+		justify-content: safe center;
 		background-color: #651e3e;
-		padding: 1em;
+		padding: 1em 20em;
 		height: 100%;
 		color: white;
 		font-size: 1.2em;
+		gap: 2em;
+
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+
+		/* scrollbar-width: none;
+		-ms-overflow-style: none; */
+
+		/* scroll-marker-group: after; */
+
+		li {
+			&::scroll-marker {
+				content: "";
+				width: 1.2em;
+				height: 60%;
+				background-color: transparent;
+				border: 2px solid black;
+				border-radius: 0.2em;
+				background-color: grey;
+			}
+			&::scroll-marker:active {
+				border: 1px solid red;
+			}
+			&::scroll-marker:target-current {
+				border: 1px solid yellow;
+			}
+		}
+
+		span {
+			position: absolute;
+			top: 100px;
+			left: 140px;
+			padding: 0.2em;
+			border: 0.2em solid white;
+		}
+
+		&::scroll-marker-group {
+			border: 3px solid red;
+			height: 3em;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 1em;
+		}
+
+		/* &::-webkit-scrollbar {
+			display: none;
+		} */
 	}
 }
 
@@ -89,12 +134,32 @@ header {
 
 .card {
 	background-color: #851e3e;
-	width: 240px;
+	height: 100%;
+	width: 400px;
 	color: white;
 	box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 	padding: 0.5em;
 	border-radius: 0.6em;
 	border: 0.3em solid white;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	flex-shrink: 0;
+	z-index: 0;
+	position: relative;
+
+	scroll-snap-align: center;
+
+	&::before {
+		content: "";
+		position: absolute;
+		z-index: -1;
+		inset: 0;
+		background-image: url("./imgs/pink-book.png");
+		background-size: cover;
+		background-position: -1.1em;
+		filter: blur(0.3em) brightness(0.9);
+	}
 
 	form {
 		display: flex;
@@ -180,4 +245,9 @@ header {
 			width: 200px;
 		}
 	}
+}
+
+.bookImage {
+	transform: rotate(22deg);
+	margin-left: -1em;
 }
