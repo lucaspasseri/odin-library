@@ -185,9 +185,11 @@ function createDisplay() {
 
 		myLibrary.getLibrary().forEach(book => {
 			const li = document.createElement("li");
-			li.textContent = book.title;
 			li.setAttribute("data-id", book.id);
 			li.classList.add("card");
+
+			const cardHeader = document.createElement("h3");
+			cardHeader.textContent = book.title;
 
 			const deleteButton = document.createElement("button");
 			deleteButton.textContent = "delete book";
@@ -199,18 +201,30 @@ function createDisplay() {
 			});
 
 			const checkboxWasRead = document.createElement("input");
+			checkboxWasRead.id = `checkbox-${book.id}`;
 			checkboxWasRead.setAttribute("type", "checkbox");
 			checkboxWasRead.checked = book.wasRead;
-			checkboxWasRead.setAttribute(
-				"name",
-				`${book.title}-wasRead:${book.wasRead}`
-			);
+			// checkboxWasRead.setAttribute(
+			// 	"name",
+			// 	`${book.title}-wasRead:${book.wasRead}`
+			// );
 			checkboxWasRead.addEventListener("change", e => {
-				myLibrary.toggleWasReadById(e.target.parentNode.dataset.id);
-				render();
+				myLibrary.toggleWasReadById(book.id);
+
+				console.log({ b: book.wasRead });
+				// render(); ??? the state is ok but the dom
 			});
 
-			li.appendChild(checkboxWasRead);
+			const checkboxLabel = document.createElement("label");
+			checkboxLabel.setAttribute("for", `checkbox-${book.id}`);
+
+			const checkboxContainer = document.createElement("div");
+			checkboxContainer.classList.add("checkboxContainer");
+			checkboxContainer.appendChild(checkboxWasRead);
+			checkboxContainer.appendChild(checkboxLabel);
+
+			li.appendChild(cardHeader);
+			li.appendChild(checkboxContainer);
 			li.appendChild(deleteButton);
 
 			ul.appendChild(li);

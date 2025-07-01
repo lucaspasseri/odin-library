@@ -9,6 +9,9 @@
 
 :root {
 	--default-width: 1200px;
+	--light-wine: #851e3e;
+	--wine: #651e3e;
+	--dark-wine: #451e3e;
 }
 
 *,
@@ -55,7 +58,7 @@ button {
 
 header {
 	width: 100%;
-	background-color: #451e3e;
+	background-color: var(--dark-wine);
 	color: white;
 	height: 160px;
 	font-size: 3em;
@@ -63,7 +66,7 @@ header {
 }
 
 .book-list-container {
-	background-color: #451e3e;
+	background-color: var(--dark-wine);
 	padding: 3em;
 	min-height: 600px;
 	width: 100%;
@@ -72,7 +75,7 @@ header {
 		display: flex;
 		list-style: none;
 		justify-content: safe center;
-		background-color: #651e3e;
+		background-color: var(--wine);
 		padding: 1em 20em;
 		height: 100%;
 		color: white;
@@ -82,26 +85,27 @@ header {
 		overflow-x: auto;
 		scroll-snap-type: x mandatory;
 
-		/* scrollbar-width: none;
-		-ms-overflow-style: none; */
+		scrollbar-width: none;
+		-ms-overflow-style: none;
 
-		/* scroll-marker-group: after; */
+		scroll-marker-group: after;
 
 		li {
 			&::scroll-marker {
 				content: "";
-				width: 1.2em;
-				height: 60%;
+				width: 1em;
+				height: 1em;
 				background-color: transparent;
 				border: 2px solid black;
 				border-radius: 0.2em;
-				background-color: grey;
+				background-color: white;
+				cursor: pointer;
 			}
 			&::scroll-marker:active {
-				border: 1px solid red;
+				border: 1px solid white;
 			}
 			&::scroll-marker:target-current {
-				border: 1px solid yellow;
+				background-color: var(--light-wine);
 			}
 		}
 
@@ -114,17 +118,17 @@ header {
 		}
 
 		&::scroll-marker-group {
-			border: 3px solid red;
 			height: 3em;
 			display: flex;
 			justify-content: center;
 			align-items: center;
 			gap: 1em;
+			margin-top: -0.2em;
 		}
 
-		/* &::-webkit-scrollbar {
+		&::-webkit-scrollbar {
 			display: none;
-		} */
+		}
 	}
 }
 
@@ -133,7 +137,7 @@ header {
 }
 
 .card {
-	background-color: #851e3e;
+	background-color: var(--light-wine);
 	height: 100%;
 	width: 400px;
 	color: white;
@@ -143,7 +147,6 @@ header {
 	border: 0.3em solid white;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
 	flex-shrink: 0;
 	z-index: 0;
 	position: relative;
@@ -174,6 +177,7 @@ header {
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp: 2;
 		overflow: hidden;
+		font-size: 2em;
 	}
 
 	fieldset {
@@ -183,7 +187,7 @@ header {
 	}
 	button {
 		display: flex;
-		font-size: 0.9em;
+		font-size: 1.2em;
 		align-items: center;
 		justify-content: center;
 		gap: 0.4em;
@@ -202,7 +206,7 @@ header {
 	height: min(50%, "fit-content");
 	font-size: 1.2em;
 	padding: 2em;
-	background-color: #451e3e;
+	background-color: var(--dark-wine);
 	border: 0;
 	box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
 		rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
@@ -247,7 +251,71 @@ header {
 	}
 }
 
-.bookImage {
-	transform: rotate(22deg);
-	margin-left: -1em;
+.checkboxContainer {
+	margin-top: auto;
+	margin-bottom: 2em;
+
+	&::before {
+		content: "Did you read it?";
+		font-size: 1.2em;
+	}
+
+	input {
+		display: none;
+	}
+
+	label {
+		font-size: 1.2em;
+		display: block;
+		width: 4.2em;
+		height: 2em;
+		background-color: black;
+		position: relative;
+		color: var(--light-wine);
+		cursor: pointer;
+		border-radius: 0.4rem;
+	}
+
+	label::before {
+		display: flex;
+		content: "";
+	}
+
+	label::after {
+		display: flex;
+		content: "";
+		position: absolute;
+		top: 0;
+		justify-content: center;
+		align-items: center;
+	}
+
+	input + label::before {
+		background-color: #f1f1f1;
+		height: 100%;
+		width: 100%;
+		border-radius: 0.4rem;
+		transition: all 0.5s;
+	}
+
+	input:checked + label::before {
+		background-color: #8ce196;
+	}
+
+	input + label::after {
+		background-color: white;
+		height: 100%;
+		width: 50%;
+		transition: all 0.5s;
+		content: "No";
+		border-radius: 0.4rem;
+		font-size: 1.1em;
+		font-weight: bold;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+	}
+
+	input:checked + label::after {
+		transform: translateX(100%);
+		content: "Yes";
+	}
 }
