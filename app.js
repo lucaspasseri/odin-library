@@ -1,5 +1,4 @@
 const myLibrary = (function () {
-	/// NO DIALOG, THE CANCEL BUTTON IS SUBMITTING and CREATING a NEW BOOK!!!!!
 	const myLibraryArr = [];
 	const display = createDisplay();
 
@@ -124,17 +123,11 @@ function createDisplay() {
 		return carouselCurrentItemIndex;
 	}
 
-	console.log({ bookLi });
-
 	function init() {
 		carouselLeftBtn.addEventListener("click", () => {
 			const booksLi = document.querySelectorAll(".book-list-container li");
 			decreaseCarouselItemIndex();
 
-			console.log({
-				i: getCarouselItemIndex(),
-				size: myLibrary.getLibrary().length,
-			});
 			booksLi[getCarouselItemIndex()]?.scrollIntoView({
 				inline: "center",
 				behavior: "smooth",
@@ -144,10 +137,6 @@ function createDisplay() {
 			const booksLi = document.querySelectorAll(".book-list-container li");
 			increaseCarouselItemIndex();
 
-			console.log({
-				i: getCarouselItemIndex(),
-				size: myLibrary.getLibrary().length,
-			});
 			booksLi[getCarouselItemIndex()]?.scrollIntoView({
 				inline: "center",
 				behavior: "smooth",
@@ -188,31 +177,45 @@ function createDisplay() {
 			li.setAttribute("data-id", book.id);
 			li.classList.add("card");
 
-			const cardHeader = document.createElement("h3");
-			cardHeader.textContent = book.title;
+			const cardTitle = document.createElement("h3");
+			cardTitle.textContent = book.title;
+
+			const cardAuthor = document.createElement("p");
+			cardAuthor.textContent = `Author: ${book.author}`;
+
+			const cardPages = document.createElement("p");
+			cardPages.textContent = `#: ${book.pages} pages`;
+
+			const cardInfo = document.createElement("div");
+			cardInfo.appendChild(cardAuthor);
+			cardInfo.appendChild(cardPages);
 
 			const deleteButton = document.createElement("button");
-			deleteButton.textContent = "delete book";
 
 			deleteButton.addEventListener("click", e => {
-				const bookId = e.target.parentNode.dataset.id;
-				myLibrary.removeBookById(bookId);
+				myLibrary.removeBookById(book.id);
 				render();
 			});
+
+			const trashCanImg = document.createElement("img");
+			trashCanImg.setAttribute("src", "./imgs/trash-can-outline.svg");
+			trashCanImg.setAttribute("alt", "Trash can");
+			trashCanImg.setAttribute("width", "30px");
+			trashCanImg.setAttribute("height", "30px");
+
+			deleteButton.appendChild(trashCanImg);
+
+			const deleteButtonLabel = document.createElement("label");
+
+			deleteButtonLabel.textContent = "Delete";
+			deleteButtonLabel.appendChild(deleteButton);
 
 			const checkboxWasRead = document.createElement("input");
 			checkboxWasRead.id = `checkbox-${book.id}`;
 			checkboxWasRead.setAttribute("type", "checkbox");
 			checkboxWasRead.checked = book.wasRead;
-			// checkboxWasRead.setAttribute(
-			// 	"name",
-			// 	`${book.title}-wasRead:${book.wasRead}`
-			// );
-			checkboxWasRead.addEventListener("change", e => {
+			checkboxWasRead.addEventListener("change", () => {
 				myLibrary.toggleWasReadById(book.id);
-
-				console.log({ b: book.wasRead });
-				// render(); ??? the state is ok but the dom
 			});
 
 			const checkboxLabel = document.createElement("label");
@@ -220,12 +223,23 @@ function createDisplay() {
 
 			const checkboxContainer = document.createElement("div");
 			checkboxContainer.classList.add("checkboxContainer");
+
+			const title = document.createElement("span");
+			title.textContent = "Did you read it?";
+
+			checkboxLabel.appendChild(title);
+
 			checkboxContainer.appendChild(checkboxWasRead);
 			checkboxContainer.appendChild(checkboxLabel);
 
-			li.appendChild(cardHeader);
-			li.appendChild(checkboxContainer);
-			li.appendChild(deleteButton);
+			const checkboxContainerWrapper = document.createElement("div");
+
+			checkboxContainerWrapper.appendChild(checkboxContainer);
+			checkboxContainerWrapper.appendChild(deleteButtonLabel);
+
+			li.appendChild(cardTitle);
+			li.appendChild(cardInfo);
+			li.appendChild(checkboxContainerWrapper);
 
 			ul.appendChild(li);
 		});

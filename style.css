@@ -100,6 +100,7 @@ header {
 				border-radius: 0.2em;
 				background-color: white;
 				cursor: pointer;
+				box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 			}
 			&::scroll-marker:active {
 				border: 1px solid white;
@@ -164,13 +165,6 @@ header {
 		filter: blur(0.3em) brightness(0.9);
 	}
 
-	form {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		gap: 1em;
-	}
-
 	h3 {
 		text-align: center;
 		display: -webkit-box;
@@ -178,23 +172,48 @@ header {
 		-webkit-line-clamp: 2;
 		overflow: hidden;
 		font-size: 2em;
+		text-shadow: 0 0 2px black;
+		-webkit-text-stroke: 0.5px black;
 	}
 
-	fieldset {
-		display: flex;
-		gap: 1em;
-		font-size: 0.8em;
+	> div:first-of-type {
+		margin-top: auto;
+		margin-bottom: 1.6em;
+		font-size: 1.25em;
+		text-shadow: 0 0 2px black;
+		-webkit-text-stroke: 0.5px black;
 	}
+
+	> div:nth-of-type(2) {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+	}
+
 	button {
 		display: flex;
 		font-size: 1.2em;
 		align-items: center;
 		justify-content: center;
-		gap: 0.4em;
-		padding: 0.8em;
-		p {
-			display: flex;
-		}
+		width: fit-content;
+		gap: 0.2em;
+		padding: 0.5em;
+		height: 2em;
+		border-radius: 0.2em;
+		border: 0;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+	}
+
+	label {
+		display: flex;
+		flex-direction: column;
+		align-items: end;
+		cursor: pointer;
+	}
+
+	.checkboxContainer + label {
+		text-shadow: 0 0 2px black;
+		-webkit-text-stroke: 0.5px black;
 	}
 }
 
@@ -245,23 +264,19 @@ header {
 	.btn-container {
 		display: flex;
 		gap: 2em;
-		≈ button {
+
+		button {
 			width: 200px;
 		}
 	}
 }
 
 .checkboxContainer {
-	margin-top: auto;
-	margin-bottom: 2em;
-
-	&::before {
-		content: "Did you read it?";
-		font-size: 1.2em;
-	}
-
 	input {
-		display: none;
+		position: absolute;
+		opacity: 0;
+		width: 0;
+		height: 0;
 	}
 
 	label {
@@ -274,6 +289,19 @@ header {
 		color: var(--light-wine);
 		cursor: pointer;
 		border-radius: 0.4rem;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+
+		span {
+			position: absolute;
+			top: -1.7em;
+			left: 0;
+			width: 8em;
+			color: white;
+			border: 0;
+			font-size: 0.9em;
+			text-shadow: 0 0 2px black;
+			-webkit-text-stroke: 0.5px black;
+		}
 	}
 
 	label::before {
