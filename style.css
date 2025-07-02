@@ -9,6 +9,12 @@
 
 :root {
 	--default-width: 1200px;
+	--light-wine: #851e3e;
+	--wine: #651e3e;
+	--dark-wine: #451e3e;
+	--basic-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+	--positive-green: #8ce196;
+	--ease-transition: all 400ms ease-in-out;
 }
 
 *,
@@ -35,12 +41,13 @@ body {
 }
 
 button {
-	height: 60px;
 	font-size: 1.2rem;
-	padding: 0.6em 2em;
 	cursor: pointer;
-	border-radius: 0.6em;
-	width: min(50em, "fit-content");
+	border-radius: 0.4em;
+	height: fit-content;
+	padding: 0.6em 1em;
+	font-weight: bold;
+	color: var(--wine);
 }
 
 .container {
@@ -51,35 +58,97 @@ button {
 	gap: 3em;
 	max-width: var(--default-width);
 	align-items: center;
+	position: relative;
+
+	> button:hover {
+		background-color: var(--positive-green);
+		transition: var(--ease-transition);
+	}
 }
 
 header {
 	width: 100%;
-	background-color: #451e3e;
+	background-color: var(--dark-wine);
 	color: white;
 	height: 160px;
-	font-size: 3em;
+	font-size: 2em;
 	padding: 1em;
 }
 
-.book-list-container {
-	background-color: #451e3e;
-	padding: 3em;
-	min-height: 456px;
+.book-list-container-wrapper {
 	width: 100%;
+	position: relative;
+}
+
+.book-list-container {
+	background-color: var(--dark-wine);
+	padding: 3em;
+	min-height: 600px;
+	width: 100%;
+	position: relative;
+	height: 100%;
+	border-radius: 0.8em;
 
 	ul {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-		align-items: center;
-		row-gap: 2em;
-		justify-items: center;
+		display: flex;
 		list-style: none;
-		background-color: #651e3e;
-		padding: 1em;
+		justify-content: safe center;
+		background-color: var(--wine);
+		padding: 1em 20em;
 		height: 100%;
 		color: white;
 		font-size: 1.2em;
+		gap: 2em;
+		box-shadow: var(--basic-shadow);
+
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+
+		scroll-marker-group: after;
+
+		li {
+			&::scroll-marker {
+				content: "";
+				width: 0.8em;
+				height: 0.8em;
+				background-color: transparent;
+				border: 2px solid black;
+				border-radius: 0.2em;
+				background-color: white;
+				cursor: pointer;
+				box-shadow: var(--basic-shadow);
+			}
+			&::scroll-marker:active {
+				border: 1px solid white;
+			}
+			&::scroll-marker:target-current {
+				background-color: var(--positive-green);
+			}
+		}
+
+		span {
+			position: absolute;
+			top: 100px;
+			left: 140px;
+			padding: 0.2em;
+			border: 0.2em solid white;
+		}
+
+		&::scroll-marker-group {
+			height: 3em;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 1em;
+			margin-top: -0.2em;
+		}
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
 	}
 }
 
@@ -88,44 +157,86 @@ header {
 }
 
 .card {
-	background-color: #851e3e;
-	width: 240px;
+	background-color: var(--light-wine);
+	height: 100%;
+	width: 400px;
 	color: white;
 	box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 	padding: 0.5em;
 	border-radius: 0.6em;
 	border: 0.3em solid white;
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
+	z-index: 0;
+	position: relative;
 
-	form {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		gap: 1em;
+	scroll-snap-align: center;
+
+	&::before {
+		content: "";
+		position: absolute;
+		z-index: -1;
+		inset: 0;
+		background-image: url("./imgs/pink-book.png");
+		background-size: cover;
+		background-position: -1.1em;
+		filter: blur(0.3em) brightness(0.9);
 	}
 
 	h3 {
 		text-align: center;
-		display: -webkit-box;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 2;
-		overflow: hidden;
+		word-break: break-all;
+		font-size: 2em;
+		text-shadow: 0 0 2px black;
+		-webkit-text-stroke: 0.5px black;
 	}
 
-	fieldset {
-		display: flex;
-		gap: 1em;
-		font-size: 0.8em;
+	> div:first-of-type {
+		margin-top: auto;
+		margin-bottom: 1.6em;
+		font-size: 1.25em;
+		text-shadow: 0 0 2px black;
+		-webkit-text-stroke: 0.5px black;
 	}
+
+	> div:nth-of-type(2) {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+	}
+
 	button {
 		display: flex;
-		font-size: 0.9em;
+		font-size: 1.2em;
 		align-items: center;
 		justify-content: center;
-		gap: 0.4em;
-		padding: 0.8em;
-		p {
-			display: flex;
+		width: fit-content;
+		gap: 0.2em;
+		padding: 0.5em;
+		height: 2em;
+		border-radius: 0.2em;
+		border: 0;
+		box-shadow: var(--basic-shadow);
+
+		color: var(--wine);
+
+		svg {
+			width: 1.25em;
+			height: 1.25em;
 		}
+	}
+
+	label {
+		display: flex;
+		flex-direction: column;
+		align-items: end;
+		cursor: pointer;
+	}
+
+	.checkboxContainer + label {
+		text-shadow: 0 0 2px black;
+		-webkit-text-stroke: 0.5px black;
 	}
 }
 
@@ -133,23 +244,41 @@ header {
 	color: white;
 	align-self: center;
 	justify-self: center;
-	width: min(60%, var(--default-width));
-	height: min(50%, "fit-content");
+	width: min(80%, fit-content);
+	height: min(50%, fit-content);
 	font-size: 1.2em;
 	padding: 2em;
-	background-color: #451e3e;
+	background-color: var(--dark-wine);
 	border: 0;
 	box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
 		rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
+	h2 {
+		margin-bottom: 1.6em;
+	}
+
 	form {
 		display: flex;
 		flex-direction: column;
-		gap: 2em;
+		gap: 1.5em;
 		height: 100%;
 		justify-content: space-evenly;
 
-		input {
+		> div {
+			display: flex;
+			gap: 2em;
+
+			> label {
+				width: 20em;
+			}
+
+			label[for="pages"] {
+				width: 8em;
+			}
+		}
+
+		input[type="text"],
+		input[type="number"] {
 			width: 100%;
 			height: 32px;
 			border-radius: 0.6em;
@@ -175,9 +304,128 @@ header {
 
 	.btn-container {
 		display: flex;
-		gap: 2em;
-		≈ button {
-			width: 200px;
+		gap: 1.5em;
+
+		/* button {
+			height: fit-content;
+			padding: 0.6em 1em;
+			font-weight: bold;
+			color: var(--wine);
+			font-size: 1.1em;
+		} */
+
+		button:last-of-type:hover {
+			background-color: var(--positive-green);
+			transition: var(--ease-transition);
 		}
+	}
+}
+
+.checkboxContainer {
+	input {
+		position: absolute;
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+
+	label {
+		font-size: 1.2em;
+		display: block;
+		width: 4.2em;
+		height: 2em;
+		background-color: black;
+		position: relative;
+		color: var(--light-wine);
+		cursor: pointer;
+		border-radius: 0.4rem;
+		box-shadow: var(--basic-shadow);
+
+		span {
+			position: absolute;
+			top: -1.7em;
+			left: 0;
+			width: 8em;
+			color: white;
+			border: 0;
+			font-size: 0.9em;
+			text-shadow: 0 0 2px black;
+			-webkit-text-stroke: 0.5px black;
+		}
+	}
+
+	label::before {
+		display: flex;
+		content: "";
+	}
+
+	label::after {
+		display: flex;
+		content: "";
+		position: absolute;
+		top: 0;
+		justify-content: center;
+		align-items: center;
+	}
+
+	input + label::before {
+		background-color: #f1f1f1;
+		height: 100%;
+		width: 100%;
+		border-radius: 0.4rem;
+		transition: var(--ease-transition);
+	}
+
+	input:checked + label::before {
+		background-color: var(--positive-green);
+	}
+
+	input + label::after {
+		background-color: white;
+		height: 100%;
+		width: 50%;
+		transition: var(--ease-transition);
+		content: "No";
+		border-radius: 0.4rem;
+		font-size: 1.1em;
+		font-weight: bold;
+		box-shadow: var(--basic-shadow);
+	}
+
+	input:checked + label::after {
+		transform: translateX(100%);
+		content: "Yes";
+	}
+}
+
+.carousel-left-right-container {
+	button {
+		color: #fff;
+		opacity: 0.1;
+		cursor: pointer;
+		border: none;
+	}
+
+	button:hover {
+		opacity: 1;
+		transition: var(--ease-transition);
+	}
+
+	button:first-of-type {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		padding: 0 0.65em;
+		background: linear-gradient(to left, transparent 0%, black 200%);
+	}
+
+	button:nth-of-type(2) {
+		position: absolute;
+		top: 0;
+		right: 0;
+		height: 100%;
+		padding: 0 0.7em;
+		background: linear-gradient(to right, transparent 0%, black 200%);
 	}
 }

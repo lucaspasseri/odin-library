@@ -1,181 +1,260 @@
-const container = document.querySelector(".container");
-const bookListContainer = document.querySelector(".book-list-container");
-const openDialogBtn = document.querySelector(".open-dialog-btn");
-const dialog = document.querySelector(".dialog");
-const form = document.querySelector(".form");
+const myLibrary = (function () {
+	const myLibraryArr = [];
+	const display = createDisplay();
 
-let myLibrary = [];
+	function init() {
+		display.init();
+		display.render();
+	}
 
-renderLibrary();
+	function getLibrary() {
+		return [...myLibraryArr];
+	}
 
-function renderLibrary() {
-	bookListContainer.innerHTML = "";
+	function addBook(book) {
+		if (book instanceof Book) {
+			myLibraryArr.push(book);
+		}
+	}
 
-	const ul = document.createElement("ul");
+	function removeBookById(id) {
+		if (typeof id === "string") {
+			const index = myLibraryArr.findIndex(book => book.id === id);
+			if (index !== -1) {
+				myLibraryArr.splice(index, 1);
+			}
+		}
+	}
 
-	if (myLibrary.length === 0) {
-		ul.textContent = "(Empty)";
+	function toggleWasRead(book) {
+		if (book instanceof Book) {
+			book.toggleWasRead();
+		}
+	}
+
+	function getBookById(id) {
+		if (typeof id === "string") {
+			const book = myLibraryArr.find(book => book.id === id);
+			return book;
+		}
+	}
+
+	function toggleWasReadById(id) {
+		toggleWasRead(getBookById(id));
+	}
+
+	return {
+		init,
+		getLibrary,
+		addBook,
+		removeBookById,
+		toggleWasReadById,
+	};
+})();
+
+class Book {
+	id;
+	title;
+	author;
+	pages;
+	wasRead;
+
+	constructor(
+		title = "(empty)",
+		author = "(empty)",
+		pages = 0,
+		wasRead = false
+	) {
+		this.id = crypto.randomUUID();
+		this.title = title;
+		this.author = author;
+		this.pages = pages;
+		this.wasRead = wasRead;
+	}
+
+	toggleWasRead() {
+		this.wasRead = !this.wasRead;
+	}
+}
+
+function createDisplay() {
+	const bookListContainer = document.querySelector(".book-list-container");
+	const openDialogBtn = document.querySelector(".open-dialog-btn");
+	const dialog = document.querySelector(".dialog");
+	const form = document.querySelector(".form");
+	const carouselLeftBtn = document.querySelector(".carousel-left-btn");
+	const carouselRightBtn = document.querySelector(".carousel-right-btn");
+
+	let carouselCurrentItemIndex = 0;
+
+	function increaseCarouselItemIndex() {
+		if (
+			myLibrary.getLibrary().length === 0 ||
+			myLibrary.getLibrary().length === 1
+		) {
+			return;
+		}
+
+		if (carouselCurrentItemIndex === myLibrary.getLibrary().length - 1) {
+			carouselCurrentItemIndex = 0;
+			return carouselCurrentItemIndex;
+		}
+		carouselCurrentItemIndex += 1;
+		return carouselCurrentItemIndex;
+	}
+	function decreaseCarouselItemIndex() {
+		if (
+			myLibrary.getLibrary().length === 0 ||
+			myLibrary.getLibrary().length === 1
+		) {
+			return;
+		}
+
+		if (carouselCurrentItemIndex === 0) {
+			carouselCurrentItemIndex = myLibrary.getLibrary().length - 1;
+			return carouselCurrentItemIndex;
+		}
+		carouselCurrentItemIndex -= 1;
+		return carouselCurrentItemIndex;
+	}
+
+	function getCarouselItemIndex() {
+		return carouselCurrentItemIndex;
+	}
+
+	function init() {
+		carouselLeftBtn.addEventListener("click", () => {
+			const booksLi = document.querySelectorAll(".book-list-container li");
+			decreaseCarouselItemIndex();
+
+			booksLi[getCarouselItemIndex()]?.scrollIntoView({
+				inline: "center",
+				behavior: "smooth",
+			});
+		});
+		carouselRightBtn.addEventListener("click", () => {
+			const booksLi = document.querySelectorAll(".book-list-container li");
+			increaseCarouselItemIndex();
+
+			booksLi[getCarouselItemIndex()]?.scrollIntoView({
+				inline: "center",
+				behavior: "smooth",
+			});
+		});
+
+		openDialogBtn.addEventListener("click", () => {
+			dialog.showModal();
+		});
+
+		form.addEventListener("submit", e => {
+			if (e.submitter.attributes.class?.value === "close-dialog-btn") {
+				dialog.close();
+				return;
+			}
+
+			const formData = new FormData(form);
+			const title = formData.get("title") || undefined;
+			const author = formData.get("author") || undefined;
+			const pages = formData.get("pages") || undefined;
+			const wasRead = formData.get("wasRead") === "wasRead" ? true : false;
+
+			const newBook = new Book(title, author, pages, wasRead);
+
+			myLibrary.addBook(newBook);
+			form.reset();
+			render();
+		});
+	}
+
+	function render() {
+		bookListContainer.innerHTML = "";
+
+		const ul = document.createElement("ul");
+
+		myLibrary.getLibrary().forEach(book => {
+			const li = document.createElement("li");
+			li.setAttribute("data-id", book.id);
+			li.classList.add("card");
+
+			const cardTitle = document.createElement("h3");
+			cardTitle.textContent = book.title;
+
+			const cardAuthor = document.createElement("p");
+			cardAuthor.textContent = `Author: ${book.author}`;
+
+			const cardPages = document.createElement("p");
+			cardPages.textContent = `# of pages: ${book.pages}`;
+
+			const cardInfo = document.createElement("div");
+			cardInfo.appendChild(cardAuthor);
+			cardInfo.appendChild(cardPages);
+
+			const deleteButton = document.createElement("button");
+
+			deleteButton.addEventListener("click", e => {
+				myLibrary.removeBookById(book.id);
+				render();
+			});
+
+			const trashIcon = `
+				<svg xmlns="http://www.w3.org/2000/svg" 
+						viewBox="0 0 24 24" 
+						fill="currentColor" 
+						width="24" 
+						height="24">
+					<path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" />
+				</svg>
+			`;
+
+			deleteButton.innerHTML = trashIcon;
+
+			const deleteButtonLabel = document.createElement("label");
+
+			deleteButtonLabel.textContent = "Delete";
+			deleteButtonLabel.appendChild(deleteButton);
+
+			const checkboxWasRead = document.createElement("input");
+			checkboxWasRead.id = `checkbox-${book.id}`;
+			checkboxWasRead.setAttribute("type", "checkbox");
+			checkboxWasRead.checked = book.wasRead;
+
+			checkboxWasRead.addEventListener("change", () => {
+				myLibrary.toggleWasReadById(book.id);
+			});
+
+			const checkboxLabel = document.createElement("label");
+			checkboxLabel.setAttribute("for", `checkbox-${book.id}`);
+
+			const checkboxContainer = document.createElement("div");
+			checkboxContainer.classList.add("checkboxContainer");
+
+			const title = document.createElement("span");
+			title.textContent = "Did you read it?";
+
+			checkboxLabel.appendChild(title);
+
+			checkboxContainer.appendChild(checkboxWasRead);
+			checkboxContainer.appendChild(checkboxLabel);
+
+			const checkboxContainerWrapper = document.createElement("div");
+
+			checkboxContainerWrapper.appendChild(checkboxContainer);
+			checkboxContainerWrapper.appendChild(deleteButtonLabel);
+
+			li.appendChild(cardTitle);
+			li.appendChild(cardInfo);
+			li.appendChild(checkboxContainerWrapper);
+
+			ul.appendChild(li);
+		});
+
 		bookListContainer.appendChild(ul);
-		return;
 	}
 
-	for (let i = 0; i < myLibrary.length; i++) {
-		const book = myLibrary[i];
-		const li = createNewBookLi(book);
-		ul.appendChild(li);
-	}
-	bookListContainer.appendChild(ul);
+	return {
+		init,
+		render,
+	};
 }
 
-function createNewBookLi(book) {
-	const li = document.createElement("li");
-	li.className = "card";
-	li.setAttribute("id", book.id);
-
-	const form = document.createElement("form");
-
-	const h3Title = document.createElement("h3");
-	h3Title.textContent = book.title;
-
-	const pAuthor = document.createElement("p");
-	pAuthor.textContent = `by: ${book.author}`;
-
-	const pPages = document.createElement("p");
-	pPages.textContent = `${book.pages}/pages`;
-
-	const wasReadFieldSet = document.createElement("fieldset");
-
-	const legend = document.createElement("legend");
-	legend.textContent = "Have you read this book?";
-
-	const wasNotReadRadioButton = document.createElement("input");
-	wasNotReadRadioButton.setAttribute("id", "wasNotReadRadioBtn");
-	wasNotReadRadioButton.setAttribute("type", "radio");
-	wasNotReadRadioButton.setAttribute("name", "wasRead");
-	wasNotReadRadioButton.setAttribute("data-book-id", book.id);
-
-	wasNotReadRadioButton.addEventListener("change", toggleWasRead);
-
-	const wasReadRadioButton = document.createElement("input");
-	wasReadRadioButton.setAttribute("id", "wasReadRadioBtn");
-	wasReadRadioButton.setAttribute("type", "radio");
-	wasReadRadioButton.setAttribute("name", "wasRead");
-	wasReadRadioButton.setAttribute("data-book-id", book.id);
-
-	wasReadRadioButton.addEventListener("change", toggleWasRead);
-	function toggleWasRead(e) {
-		const bookId = e.target.dataset.bookId;
-
-		myLibrary = myLibrary.map(book =>
-			book.id === bookId ? book.toggleWasRead() : book
-		);
-		renderLibrary();
-	}
-
-	if (book.wasRead) {
-		wasReadRadioButton.setAttribute("checked", true);
-	} else {
-		wasNotReadRadioButton.setAttribute("checked", true);
-	}
-
-	const wasNotReadLabel = document.createElement("label");
-	wasNotReadLabel.setAttribute("for", "wasNotReadRadioBtn");
-	wasNotReadLabel.textContent = "No:";
-	wasNotReadLabel.appendChild(wasNotReadRadioButton);
-
-	const wasReadLabel = document.createElement("label");
-	wasReadLabel.setAttribute("for", "wasReadRadioBtn");
-	wasReadLabel.textContent = "Yes:";
-	wasReadLabel.appendChild(wasReadRadioButton);
-
-	wasReadFieldSet.appendChild(legend);
-	wasReadFieldSet.appendChild(wasNotReadLabel);
-	wasReadFieldSet.appendChild(wasReadLabel);
-
-	const removeBookButton = document.createElement("button");
-	removeBookButton.setAttribute("type", "button");
-	removeBookButton.setAttribute("data-id", book.id);
-
-	const trashImg = document.createElement("img");
-	trashImg.setAttribute("src", "./imgs/trash-can-outline.svg");
-	trashImg.setAttribute("alt", "trash icon");
-	trashImg.setAttribute("width", "30px");
-	trashImg.setAttribute("height", "30px");
-	const pRemove = document.createElement("p");
-	pRemove.textContent = "Remove book";
-
-	removeBookButton.appendChild(trashImg);
-	removeBookButton.appendChild(pRemove);
-
-	removeBookButton.addEventListener("click", handleRemoveBook);
-
-	form.appendChild(h3Title);
-	form.appendChild(pAuthor);
-	form.appendChild(pPages);
-	form.appendChild(wasReadFieldSet);
-
-	form.appendChild(removeBookButton);
-
-	li.appendChild(form);
-
-	return li;
-}
-
-function handleRemoveBook(e) {
-	const id = e.currentTarget.dataset.id;
-	myLibrary = myLibrary.filter(book => book.id !== id);
-	renderLibrary();
-}
-
-function addBookToLibrary(
-	title = "(empty)",
-	author = "(empty)",
-	pages = 0,
-	wasRead = false
-) {
-	wasRead = wasRead === "read" ? true : false;
-	myLibrary.push(new Book(title, author, pages, wasRead));
-	renderLibrary();
-}
-
-function Book(title = "", author = "", pages = 0, wasRead = false) {
-	if (!new.target) {
-		throw Error("You must use the 'new' operator to call the constructor");
-	}
-	this.id = crypto.randomUUID();
-	this.title = title;
-	this.author = author;
-	this.pages = pages;
-	this.wasRead = wasRead;
-}
-
-Book.prototype.toggleWasRead = function () {
-	this.wasRead = !this.wasRead;
-	return this;
-};
-
-openDialogBtn.addEventListener("click", handleOpenDialog);
-function handleOpenDialog() {
-	dialog.showModal();
-}
-
-form.addEventListener("submit", handleSubmit);
-function handleSubmit(e) {
-	e.preventDefault();
-	const submitterValue = e.submitter.value;
-	if (submitterValue === "submitBook") {
-		const formData = new FormData(form);
-
-		const title = formData.get("title") || undefined;
-		const author = formData.get("author") || undefined;
-		const pages = Number(formData.get("pages")) || undefined;
-		const wasRead = formData.get("wasRead") || undefined;
-
-		addBookToLibrary(title, author, pages, wasRead);
-
-		form.reset();
-		dialog.close();
-		return;
-	}
-	dialog.close();
-}
+myLibrary.init();
