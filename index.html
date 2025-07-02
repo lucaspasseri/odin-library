@@ -8,7 +8,7 @@
 	</head>
 	<body>
 		<div class="container">
-			<header>MY LIBRARY</header>
+			<header><h1>MY LIBRARY</h1></header>
 			<div class="book-list-container-wrapper">
 				<div class="book-list-container"></div>
 				<div class="carousel-left-right-container">
@@ -22,32 +22,34 @@
 				<h2>Add a new Book</h2>
 
 				<form class="form" method="dialog" id="form-dialog">
-					<label for="title"
-						>Title:
-						<input type="text" id="title" name="title" />
-					</label>
-
-					<label for="author">
-						Author:
-						<input type="text" id="author" name="author" />
-					</label>
-
-					<label for="pages">
-						Number of pages:
-						<input type="number" id="pages" name="pages" min="0" />
-					</label>
-
-					<fieldset>
-						<legend>Did you already read this book?</legend>
-						<label for="notRead">
-							No:
-							<input type="radio" id="notRead" name="wasRead" value="notRead" />
+					<div>
+						<label for="title"
+							>Title:
+							<input type="text" id="title" name="title" />
 						</label>
-						<label for="read">
-							Yes:
-							<input type="radio" id="read" name="wasRead" value="read" />
+						<label for="pages">
+							Number of pages:
+							<input type="number" id="pages" name="pages" min="0" />
 						</label>
-					</fieldset>
+					</div>
+
+					<div>
+						<label for="author">
+							Author:
+							<input type="text" id="author" name="author" />
+						</label>
+
+						<div class="checkboxContainer">
+							<span>Did you already read this book?</span>
+							<input
+								type="checkbox"
+								id="wasRead"
+								name="wasRead"
+								value="wasRead"
+							/>
+							<label for="wasRead"> </label>
+						</div>
+					</div>
 
 					<div class="btn-container">
 						<button class="close-dialog-btn" value="cancel" autofocus>

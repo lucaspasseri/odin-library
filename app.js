@@ -84,7 +84,6 @@ function createDisplay() {
 	const form = document.querySelector(".form");
 	const carouselLeftBtn = document.querySelector(".carousel-left-btn");
 	const carouselRightBtn = document.querySelector(".carousel-right-btn");
-	const bookLi = document.querySelectorAll(".book-list-container li");
 
 	let carouselCurrentItemIndex = 0;
 
@@ -157,7 +156,7 @@ function createDisplay() {
 			const title = formData.get("title") || undefined;
 			const author = formData.get("author") || undefined;
 			const pages = formData.get("pages") || undefined;
-			const wasRead = formData.get("wasRead") === "read" ? true : false;
+			const wasRead = formData.get("wasRead") === "wasRead" ? true : false;
 
 			const newBook = new Book(title, author, pages, wasRead);
 
@@ -218,6 +217,7 @@ function createDisplay() {
 			checkboxWasRead.id = `checkbox-${book.id}`;
 			checkboxWasRead.setAttribute("type", "checkbox");
 			checkboxWasRead.checked = book.wasRead;
+
 			checkboxWasRead.addEventListener("change", () => {
 				myLibrary.toggleWasReadById(book.id);
 			});

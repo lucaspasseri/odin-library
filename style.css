@@ -13,6 +13,8 @@
 	--wine: #651e3e;
 	--dark-wine: #451e3e;
 	--basic-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+	--positive-green: #8ce196;
+	--ease-transition: all 400ms ease-in-out;
 }
 
 *,
@@ -39,12 +41,13 @@ body {
 }
 
 button {
-	height: 60px;
 	font-size: 1.2rem;
-	padding: 0.6em 2em;
 	cursor: pointer;
-	border-radius: 0.6em;
-	width: min(50em, "fit-content");
+	border-radius: 0.4em;
+	height: fit-content;
+	padding: 0.6em 1em;
+	font-weight: bold;
+	color: var(--wine);
 }
 
 .container {
@@ -56,6 +59,11 @@ button {
 	max-width: var(--default-width);
 	align-items: center;
 	position: relative;
+
+	> button:hover {
+		background-color: var(--positive-green);
+		transition: var(--ease-transition);
+	}
 }
 
 header {
@@ -63,7 +71,7 @@ header {
 	background-color: var(--dark-wine);
 	color: white;
 	height: 160px;
-	font-size: 3em;
+	font-size: 2em;
 	padding: 1em;
 }
 
@@ -117,7 +125,7 @@ header {
 				border: 1px solid white;
 			}
 			&::scroll-marker:target-current {
-				background-color: var(--light-wine);
+				background-color: var(--positive-green);
 			}
 		}
 
@@ -236,8 +244,8 @@ header {
 	color: white;
 	align-self: center;
 	justify-self: center;
-	width: min(60%, var(--default-width));
-	height: min(50%, "fit-content");
+	width: min(80%, fit-content);
+	height: min(50%, fit-content);
 	font-size: 1.2em;
 	padding: 2em;
 	background-color: var(--dark-wine);
@@ -245,14 +253,32 @@ header {
 	box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
 		rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 
+	h2 {
+		margin-bottom: 1.6em;
+	}
+
 	form {
 		display: flex;
 		flex-direction: column;
-		gap: 2em;
+		gap: 1.5em;
 		height: 100%;
 		justify-content: space-evenly;
 
-		input {
+		> div {
+			display: flex;
+			gap: 2em;
+
+			> label {
+				width: 20em;
+			}
+
+			label[for="pages"] {
+				width: 8em;
+			}
+		}
+
+		input[type="text"],
+		input[type="number"] {
 			width: 100%;
 			height: 32px;
 			border-radius: 0.6em;
@@ -278,10 +304,19 @@ header {
 
 	.btn-container {
 		display: flex;
-		gap: 2em;
+		gap: 1.5em;
 
-		button {
-			width: 200px;
+		/* button {
+			height: fit-content;
+			padding: 0.6em 1em;
+			font-weight: bold;
+			color: var(--wine);
+			font-size: 1.1em;
+		} */
+
+		button:last-of-type:hover {
+			background-color: var(--positive-green);
+			transition: var(--ease-transition);
 		}
 	}
 }
@@ -338,18 +373,18 @@ header {
 		height: 100%;
 		width: 100%;
 		border-radius: 0.4rem;
-		transition: all 0.5s;
+		transition: var(--ease-transition);
 	}
 
 	input:checked + label::before {
-		background-color: #8ce196;
+		background-color: var(--positive-green);
 	}
 
 	input + label::after {
 		background-color: white;
 		height: 100%;
 		width: 50%;
-		transition: all 0.5s;
+		transition: var(--ease-transition);
 		content: "No";
 		border-radius: 0.4rem;
 		font-size: 1.1em;
@@ -366,7 +401,6 @@ header {
 .carousel-left-right-container {
 	button {
 		color: #fff;
-		transition: all 600ms ease-in-out;
 		opacity: 0.1;
 		cursor: pointer;
 		border: none;
@@ -374,6 +408,7 @@ header {
 
 	button:hover {
 		opacity: 1;
+		transition: var(--ease-transition);
 	}
 
 	button:first-of-type {
