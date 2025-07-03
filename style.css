@@ -12,13 +12,17 @@
 	--dialog-margin-top: 0;
 	--carousel-padding: 1em 20em;
 	--form-layout: row;
+}
 
-	@media (max-width: 1200px) {
+@media (max-width: 1200px) {
+	:root {
 		--default-width: 800px;
 		--carousel-padding: 1em 10em;
 	}
+}
 
-	@media (max-width: 800px) {
+@media (max-width: 800px) {
+	:root {
 		--default-width: 560px;
 		--book-card-width: 16em;
 		--book-card-min-height: 22em;
@@ -26,6 +30,10 @@
 		--dialog-margin-top: 6em;
 		--carousel-padding: 1em 1em;
 		--form-layout: column;
+	}
+
+	h1 {
+		font-size: 1.5em;
 	}
 }
 
@@ -262,8 +270,8 @@ header {
 	align-self: var(--dialog-alignment);
 	margin-top: var(--dialog-margin-top);
 	justify-self: center;
-	width: min(80%, fit-content);
-	height: min(50%, fit-content);
+	width: min(90%, fit-content);
+	height: min(80%, fit-content);
 	font-size: 1.2em;
 	padding: 2em;
 	background-color: var(--dark-wine);
