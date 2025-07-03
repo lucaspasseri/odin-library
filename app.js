@@ -1,56 +1,46 @@
-const myLibrary = (function () {
-	const myLibraryArr = [];
-	const display = createDisplay();
+class Library {
+	#books = [];
+	#display;
 
-	function init() {
-		display.init();
-		display.render();
+	constructor() {
+		this.#display = createDisplay();
 	}
 
-	function getLibrary() {
-		return [...myLibraryArr];
+	init() {
+		this.#display.init();
+		this.#display.render();
 	}
 
-	function addBook(book) {
+	get books() {
+		return [...this.#books];
+	}
+
+	get size() {
+		return this.#books.length;
+	}
+
+	addBook(book) {
 		if (book instanceof Book) {
-			myLibraryArr.push(book);
+			this.#books.push(book);
 		}
 	}
 
-	function removeBookById(id) {
+	removeBookById(id) {
 		if (typeof id === "string") {
-			const index = myLibraryArr.findIndex(book => book.id === id);
+			const index = this.#books.findIndex(book => book.id === id);
 			if (index !== -1) {
-				myLibraryArr.splice(index, 1);
+				this.#books.splice(index, 1);
 			}
 		}
 	}
 
-	function toggleWasRead(book) {
-		if (book instanceof Book) {
-			book.toggleWasRead();
-		}
-	}
-
-	function getBookById(id) {
+	getBookById(id) {
 		if (typeof id === "string") {
-			const book = myLibraryArr.find(book => book.id === id);
+			const book = this.#books.find(book => book.id === id);
 			return book;
 		}
 	}
-
-	function toggleWasReadById(id) {
-		toggleWasRead(getBookById(id));
-	}
-
-	return {
-		init,
-		getLibrary,
-		addBook,
-		removeBookById,
-		toggleWasReadById,
-	};
-})();
+}
 
 class Book {
 	id;
@@ -72,7 +62,7 @@ class Book {
 		this.wasRead = wasRead;
 	}
 
-	toggleWasRead() {
+	toggleReadState() {
 		this.wasRead = !this.wasRead;
 	}
 }
@@ -88,14 +78,11 @@ function createDisplay() {
 	let carouselCurrentItemIndex = 0;
 
 	function increaseCarouselItemIndex() {
-		if (
-			myLibrary.getLibrary().length === 0 ||
-			myLibrary.getLibrary().length === 1
-		) {
+		if (myLibrary.size === 0 || myLibrary.size === 1) {
 			return;
 		}
 
-		if (carouselCurrentItemIndex === myLibrary.getLibrary().length - 1) {
+		if (carouselCurrentItemIndex === myLibrary.size - 1) {
 			carouselCurrentItemIndex = 0;
 			return carouselCurrentItemIndex;
 		}
@@ -103,15 +90,12 @@ function createDisplay() {
 		return carouselCurrentItemIndex;
 	}
 	function decreaseCarouselItemIndex() {
-		if (
-			myLibrary.getLibrary().length === 0 ||
-			myLibrary.getLibrary().length === 1
-		) {
+		if (myLibrary.size === 0 || myLibrary.size === 1) {
 			return;
 		}
 
 		if (carouselCurrentItemIndex === 0) {
-			carouselCurrentItemIndex = myLibrary.getLibrary().length - 1;
+			carouselCurrentItemIndex = myLibrary.size - 1;
 			return carouselCurrentItemIndex;
 		}
 		carouselCurrentItemIndex -= 1;
@@ -171,7 +155,7 @@ function createDisplay() {
 
 		const ul = document.createElement("ul");
 
-		myLibrary.getLibrary().forEach(book => {
+		myLibrary.books.forEach(book => {
 			const li = document.createElement("li");
 			li.setAttribute("data-id", book.id);
 			li.classList.add("card");
@@ -219,7 +203,8 @@ function createDisplay() {
 			checkboxWasRead.checked = book.wasRead;
 
 			checkboxWasRead.addEventListener("change", () => {
-				myLibrary.toggleWasReadById(book.id);
+				// myLibrary.toggleWasReadById(book.id);
+				myLibrary.getBookById(book.id).toggleReadState();
 			});
 
 			const checkboxLabel = document.createElement("label");
@@ -257,4 +242,5 @@ function createDisplay() {
 	};
 }
 
+const myLibrary = new Library();
 myLibrary.init();
