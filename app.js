@@ -3,7 +3,7 @@ class Library {
 	#display;
 
 	constructor() {
-		this.#display = createDisplay();
+		this.#display = new Display();
 	}
 
 	init() {
@@ -47,111 +47,124 @@ class Book {
 	title;
 	author;
 	pages;
-	wasRead;
+	readState;
 
 	constructor(
 		title = "(empty)",
 		author = "(empty)",
 		pages = 0,
-		wasRead = false
+		readState = false
 	) {
 		this.id = crypto.randomUUID();
 		this.title = title;
 		this.author = author;
 		this.pages = pages;
-		this.wasRead = wasRead;
+		this.readState = readState;
 	}
 
 	toggleReadState() {
-		this.wasRead = !this.wasRead;
+		this.readState = !this.readState;
 	}
 }
 
-function createDisplay() {
-	const bookListContainer = document.querySelector(".book-list-container");
-	const openDialogBtn = document.querySelector(".open-dialog-btn");
-	const dialog = document.querySelector(".dialog");
-	const form = document.querySelector(".form");
-	const carouselLeftBtn = document.querySelector(".carousel-left-btn");
-	const carouselRightBtn = document.querySelector(".carousel-right-btn");
+class Display {
+	#openDialogBtn;
+	#dialog;
+	#form;
+	#bookListContainer;
+	#leftBtn;
+	#rightBtn;
 
-	let carouselCurrentItemIndex = 0;
+	#carouselCurrItemIndex;
 
-	function increaseCarouselItemIndex() {
-		if (myLibrary.size === 0 || myLibrary.size === 1) {
-			return;
-		}
+	constructor() {
+		this.#openDialogBtn = document.querySelector(".open-dialog-btn");
+		this.#dialog = document.querySelector(".dialog");
+		this.#form = document.querySelector(".form");
+		this.#bookListContainer = document.querySelector(".book-list-container");
+		this.#leftBtn = document.querySelector(".carousel-left-btn");
+		this.#rightBtn = document.querySelector(".carousel-right-btn");
 
-		if (carouselCurrentItemIndex === myLibrary.size - 1) {
-			carouselCurrentItemIndex = 0;
-			return carouselCurrentItemIndex;
-		}
-		carouselCurrentItemIndex += 1;
-		return carouselCurrentItemIndex;
-	}
-	function decreaseCarouselItemIndex() {
-		if (myLibrary.size === 0 || myLibrary.size === 1) {
-			return;
-		}
-
-		if (carouselCurrentItemIndex === 0) {
-			carouselCurrentItemIndex = myLibrary.size - 1;
-			return carouselCurrentItemIndex;
-		}
-		carouselCurrentItemIndex -= 1;
-		return carouselCurrentItemIndex;
+		this.#carouselCurrItemIndex = 0;
 	}
 
-	function getCarouselItemIndex() {
-		return carouselCurrentItemIndex;
+	get currIndex() {
+		return this.#carouselCurrItemIndex;
 	}
 
-	function init() {
-		carouselLeftBtn.addEventListener("click", () => {
+	set currIndex(value) {
+		this.#carouselCurrItemIndex = value;
+	}
+
+	#updateCarouselIndex(direction) {
+		if (myLibrary.size <= 1) return;
+
+		const lastIndex = myLibrary.size - 1;
+
+		if (direction === "next") {
+			this.currIndex = this.currIndex === lastIndex ? 0 : this.currIndex + 1;
+		} else if (direction === "prev") {
+			this.currIndex = this.currIndex === 0 ? lastIndex : this.currIndex - 1;
+		}
+
+		return this.currIndex;
+	}
+
+	#decreaseCarouselItemIndex() {
+		return this.#updateCarouselIndex("prev");
+	}
+
+	#increaseCarouselItemIndex() {
+		return this.#updateCarouselIndex("next");
+	}
+
+	init() {
+		this.#leftBtn.addEventListener("click", () => {
+			this.#decreaseCarouselItemIndex();
+
 			const booksLi = document.querySelectorAll(".book-list-container li");
-			decreaseCarouselItemIndex();
-
-			booksLi[getCarouselItemIndex()]?.scrollIntoView({
+			booksLi[this.currIndex]?.scrollIntoView({
 				inline: "center",
 				behavior: "smooth",
 			});
 		});
-		carouselRightBtn.addEventListener("click", () => {
-			const booksLi = document.querySelectorAll(".book-list-container li");
-			increaseCarouselItemIndex();
 
-			booksLi[getCarouselItemIndex()]?.scrollIntoView({
+		this.#rightBtn.addEventListener("click", () => {
+			this.#increaseCarouselItemIndex();
+
+			const booksLi = document.querySelectorAll(".book-list-container li");
+			booksLi[this.currIndex]?.scrollIntoView({
 				inline: "center",
 				behavior: "smooth",
 			});
 		});
 
-		openDialogBtn.addEventListener("click", () => {
-			dialog.showModal();
+		this.#openDialogBtn.addEventListener("click", () => {
+			this.#dialog.showModal();
 		});
 
-		form.addEventListener("submit", e => {
+		this.#form.addEventListener("submit", e => {
 			if (e.submitter.attributes.class?.value === "close-dialog-btn") {
-				dialog.close();
+				this.#dialog.close();
 				return;
 			}
 
-			const formData = new FormData(form);
+			const formData = new FormData(this.#form);
 			const title = formData.get("title") || undefined;
 			const author = formData.get("author") || undefined;
 			const pages = formData.get("pages") || undefined;
-			const wasRead = formData.get("wasRead") === "wasRead" ? true : false;
+			const readState = formData.get("readState") === "true" ? true : false;
 
-			const newBook = new Book(title, author, pages, wasRead);
+			const newBook = new Book(title, author, pages, readState);
 
 			myLibrary.addBook(newBook);
-			form.reset();
-			render();
+			this.#form.reset();
+			this.render();
 		});
 	}
 
-	function render() {
-		bookListContainer.innerHTML = "";
+	render() {
+		this.#bookListContainer.innerHTML = "";
 
 		const ul = document.createElement("ul");
 
@@ -175,9 +188,9 @@ function createDisplay() {
 
 			const deleteButton = document.createElement("button");
 
-			deleteButton.addEventListener("click", e => {
+			deleteButton.addEventListener("click", _e => {
 				myLibrary.removeBookById(book.id);
-				render();
+				this.render();
 			});
 
 			const trashIcon = `
@@ -200,10 +213,9 @@ function createDisplay() {
 			const checkboxWasRead = document.createElement("input");
 			checkboxWasRead.id = `checkbox-${book.id}`;
 			checkboxWasRead.setAttribute("type", "checkbox");
-			checkboxWasRead.checked = book.wasRead;
+			checkboxWasRead.checked = book.readState;
 
 			checkboxWasRead.addEventListener("change", () => {
-				// myLibrary.toggleWasReadById(book.id);
 				myLibrary.getBookById(book.id).toggleReadState();
 			});
 
@@ -233,13 +245,8 @@ function createDisplay() {
 			ul.appendChild(li);
 		});
 
-		bookListContainer.appendChild(ul);
+		this.#bookListContainer.appendChild(ul);
 	}
-
-	return {
-		init,
-		render,
-	};
 }
 
 const myLibrary = new Library();
